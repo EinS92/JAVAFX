@@ -1,3 +1,4 @@
+
 package com.myjavafx.javafx;
 
 import java.util.Calendar;
@@ -88,6 +89,9 @@ public class ClockPane extends Pane {
         Text t3 = new Text(centerX + clockRadius - 10, centerY + 3, "3");
         Text t4 = new Text(centerX - 3, centerY + clockRadius - 3, "6");
 
+        Text t5 = new Text(centerX - 30, centerY - clockRadius + 18, "11");
+        Text t6 = new Text(centerX - clockRadius + 6, centerY - 20, "10");
+
         // Draw second hand
         double sLength = clockRadius * 0.8;
         double secondX = centerX + sLength *
@@ -116,7 +120,8 @@ public class ClockPane extends Pane {
         hLine.setStroke(Color.GREEN);
 
         getChildren().clear(); // Clear the pane
-        getChildren().addAll(circle, t1, t2, t3, t4, sLine, mLine, hLine);
+        getChildren().addAll(circle, t1, t2, t3, t4,
+                t5, t6, sLine, mLine, hLine);
     }
 
     @Override

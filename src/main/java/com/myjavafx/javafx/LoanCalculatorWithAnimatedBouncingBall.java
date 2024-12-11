@@ -11,7 +11,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.text.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -21,6 +28,12 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import kotlin.io.ConstantsKt;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Scanner;
 
 public class LoanCalculatorWithAnimatedBouncingBall extends Application {
 
@@ -32,15 +45,43 @@ public class LoanCalculatorWithAnimatedBouncingBall extends Application {
     private Button calculate = new Button("Calculate");
 
     public void start(Stage primaryStage) {
+        HBox hBox = new HBox(10);
+        hBox.setPrefSize(400,100);
 
-        Pane pane = new Pane();
-        BorderPane borderPane = new BorderPane();
+        Image image0 = new Image("C:\\Users\\mques\\OneDrive\\Documents\\SDCCD\\CISC 191\\auto.png", 100, 100, true, true);
+        Image image1 = new Image("C:\\Users\\mques\\OneDrive\\Documents\\SDCCD\\CISC 191\\mortgage.png", 100, 100, true, true);
+        Image image2 = new Image("C:\\Users\\mques\\OneDrive\\Documents\\SDCCD\\CISC 191\\personal.png", 100, 100, true, true);
+        Image image3 = new Image("C:\\Users\\mques\\OneDrive\\Documents\\SDCCD\\CISC 191\\Student.png", 100, 100, true, true);
+        Image image4 = new Image("C:\\Users\\mques\\OneDrive\\Documents\\SDCCD\\CISC 191\\business.png", 100, 100, true, true);
+
+        ImageView imageView0 = new ImageView(image0);
+        ImageView imageView1 = new ImageView(image1);
+        ImageView imageView2 = new ImageView(image2);
+        ImageView imageView3 = new ImageView(image3);
+        ImageView imageView4 = new ImageView(image4);
+
+        Button typeAuto = new Button("Auto Loan", imageView0);
+        Button typeMortgage = new Button("Mortgage Loan", imageView1);
+        Button typePersonal = new Button("Personal Loan", imageView2);
+        Button typeStudent = new Button("Student Loan", imageView3);
+        Button typeBusiness = new Button("Business Loan", imageView4);
+        Text text = new Text("Choose Your Loan!");
+
+        hBox.getChildren().addAll(typeAuto,typeMortgage, typePersonal, typeStudent, typeBusiness);
+        hBox.setAlignment(Pos.CENTER);
+
         BallPane ballPane = new BallPane();
-        ballPane.setPrefSize(100,100);
+        ballPane.setPrefSize(400,100);
+        ballPane.setOnMousePressed(e -> ballPane.pause());
+        ballPane.setOnMouseReleased(e -> ballPane.play());
+        ballPane.setOnMouseClicked(e->{
+            if (e.getButton() == MouseButton.SECONDARY) {
+                ballPane.setColorRandom();
+            }
+        });
+
         ClockPane clockPane = new ClockPane();
         clockPane.setPrefSize(150,150);
-        pane.getChildren().add(ballPane);
-        //Create a handler for animation
         EventHandler<ActionEvent> eventHandler = e -> {
             clockPane.setCurrentTime(); //Set a new clock time
         };
@@ -52,6 +93,8 @@ public class LoanCalculatorWithAnimatedBouncingBall extends Application {
         animation.play();   //Start animation
 
         GridPane gridPane = new GridPane();
+        gridPane.setPrefSize(400,300);
+
         gridPane.setHgap(5);
         gridPane.setVgap(5);
 
@@ -86,34 +129,44 @@ public class LoanCalculatorWithAnimatedBouncingBall extends Application {
         //Set properties for UI
         gridPane.setAlignment(Pos.CENTER);
         annualInterestRate.setAlignment(Pos.BASELINE_LEFT);
+        annualInterestRate.setEditable(true);
+        annualInterestRate.setStyle("-fx-text-fill: green");
+        annualInterestRate.setFont(Font.font("Goudy Stout"));
 
         numberOfYears.setAlignment(Pos.BASELINE_LEFT);
+        numberOfYears.setEditable(true);
+        numberOfYears.setStyle("-fx-text-fill: green");
+        numberOfYears.setFont(Font.font("Goudy Stout"));
 
         loanAmount.setAlignment(Pos.BASELINE_LEFT);
+        loanAmount.setEditable(true);
+        loanAmount.setStyle("-fx-text-fill: green");
+        loanAmount.setFont(Font.font("Goudy Stout"));
 
-
-        Label label7 = new Label(String.valueOf(monthlyPayment));
-        label7.setFont(Font.font("Goudy Stout",FontWeight.NORMAL,FontPosture.ITALIC, 20));
         monthlyPayment.setAlignment(Pos.BASELINE_LEFT);
         monthlyPayment.setEditable(true);
-        monthlyPayment.setStyle("-fx-text-fill: pink");
+        monthlyPayment.setStyle("-fx-text-fill: green");
+        monthlyPayment.setFont(Font.font("Goudy Stout"));
 
-        Label label8 = new Label(String.valueOf(totalPayment));
-        label8.setFont(Font.font("Goudy Stout", FontWeight.BOLD, FontPosture.ITALIC, 10));
         totalPayment.setAlignment(Pos.BASELINE_LEFT);
         totalPayment.setEditable(true);
-        totalPayment.setStyle("-fx-text-fill: pink");
-
+        totalPayment.setStyle("-fx-text-fill: green");
+        totalPayment.setFont(Font.font("Goudy Stout"));
         GridPane.setHalignment(calculate, HPos.LEFT);
 
         //Process events
         calculate.setOnAction(e -> calculateLoanPayment());
+
+        BorderPane borderPane = new BorderPane();
         borderPane.setCenter(gridPane);
         borderPane.setLeft(clockPane);
-        borderPane.setTop(pane);
+        borderPane.setBottom(hBox);
+        borderPane.setTop(ballPane);
+        borderPane.setRight(text);
+
 
         //Create a scene and place it in the stage
-        Scene scene = new Scene(borderPane, 400, 250);
+        Scene scene = new Scene(borderPane, 1000, 750);
         primaryStage.setTitle("LoanCalculator");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -135,7 +188,5 @@ public class LoanCalculatorWithAnimatedBouncingBall extends Application {
         totalPayment.setText(String.format("$%.2f",
                 loan.getTotalPayment()));
     }
-
-
 }
 

@@ -19,9 +19,9 @@ public class ResizableCircleRectangle extends Application {
     @Override //Override the start method in the Application class
     public void start(Stage primaryStage) {
         circle.setFill(Color.GRAY);
-        rectangle.setFill(Color.WHITE);
+        rectangle.setFill(Color.TRANSPARENT);
         rectangle.setStroke(Color.BLACK);
-        pane.getChildren().addAll(rectangle, circle);
+        pane.getChildren().addAll(circle, rectangle);
 
         //Create a scene and place the pane in the stage
         Scene scene = new Scene(pane, 140, 140);
